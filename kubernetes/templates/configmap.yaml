@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+  namespace: {{ .Release.Namespace }}
+data:
+  DOMAIN: "{{ .Values.global.DOMAIN }}"
+  SMTP_HOST: "{{ .Values.global.SMTP_HOST }}"
+  SMTP_FROM: "{{ .Values.global.SMTP_FROM }}"
+  SMTP_FROM_NAME: "{{ .Values.global.SMTP_FROM_NAME }}"
+  SMTP_SECURITY: "{{ .Values.global.SMTP_SECURITY }}"
+  SMTP_PORT: "{{ .Values.global.SMTP_PORT }}"
+  SMTP_TIMEOUT: "{{ .Values.global.SMTP_TIMEOUT }}"
+  SIGNUPS_ALLOWED: "{{ .Values.global.SIGNUPS_ALLOWED }}"

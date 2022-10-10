@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+        release: server
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: server
+        image: vaultwarden/server:1.25.2
+        ports:
+          - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-configmap
+        env:
+          - name: SMTP_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: globalsettings-smtp
+                key: SMTP_USERNAME
+                optional: false
+          - name: SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: globalsettings-smtp
+                key: SMTP_PASSWORD
+                optional: false
+        volumeMounts:
+          - mountPath: /data
+            name: {{ .Release.Name }}-data
+      volumes:
+        - name: {{ .Release.Name }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-data
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.global.storageClassName }}
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-server
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: server
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 80

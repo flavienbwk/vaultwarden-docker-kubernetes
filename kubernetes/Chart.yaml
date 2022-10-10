@@ -1,0 +1,12 @@
+name: vaultwarden-kubernetes
+
+apiVersion: v1
+type: application
+version: 2022.10.11-1
+
+description: Vaultwarden
+home: https://github.com/flavienbwk/vaultwarden-docker-kubernetes
+
+maintainers:
+- email: flavien@berwick.fr
+  name: Flavien
