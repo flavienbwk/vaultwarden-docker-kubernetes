@@ -7,16 +7,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: vault.evalifai.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: {{ .Release.Name }}-server
-            port:
-              number: 8080
   - host: {{ .Values.domain }}
     http:
       paths:
